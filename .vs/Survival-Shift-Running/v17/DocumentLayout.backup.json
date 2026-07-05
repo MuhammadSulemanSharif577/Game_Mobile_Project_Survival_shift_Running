@@ -1,0 +1,231 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\UnityProjects\\Survival-Shift-Running\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\EnemyController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\EnemyController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\playerMovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\playerMovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\GameManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\GameManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\healthBar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\healthBar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\CoinScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\CoinScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TrackManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\TrackManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\ObjectPoolManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\ObjectPoolManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TrackTile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\TrackTile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TileObjectSp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\TileObjectSp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\CameraFollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\CameraFollow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\LoadScene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\LoadScene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\scoreConroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\scoreConroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\UnityProjects\\Survival-Shift-Running\\Assets\\TerrainFix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TerrainFix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CoinScript.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\CoinScript.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\CoinScript.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\CoinScript.cs",
+              "RelativeToolTip": "Assets\\scripts\\CoinScript.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAADwvzMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-29T21:47:03.978Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EnemyController.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\EnemyController.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\EnemyController.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\EnemyController.cs",
+              "RelativeToolTip": "Assets\\scripts\\EnemyController.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAAEQAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-01T19:03:49.837Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\GameManager.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\GameManager.cs",
+              "RelativeToolTip": "Assets\\scripts\\GameManager.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAADIAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-20T10:13:02.458Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TrackTile.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TrackTile.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\TrackTile.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TrackTile.cs",
+              "RelativeToolTip": "Assets\\scripts\\TrackTile.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAD0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-16T05:57:45.708Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "TileObjectSp.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TileObjectSp.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\TileObjectSp.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TileObjectSp.cs",
+              "RelativeToolTip": "Assets\\scripts\\TileObjectSp.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-16T05:16:42.102Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ObjectPoolManager.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\ObjectPoolManager.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\ObjectPoolManager.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\ObjectPoolManager.cs",
+              "RelativeToolTip": "Assets\\scripts\\ObjectPoolManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-16T01:33:34.325Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "LoadScene.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\LoadScene.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\LoadScene.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\LoadScene.cs",
+              "RelativeToolTip": "Assets\\scripts\\LoadScene.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T14:43:32.783Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "healthBar.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\healthBar.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\healthBar.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\healthBar.cs",
+              "RelativeToolTip": "Assets\\scripts\\healthBar.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAH4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-13T11:03:50.696Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "playerMovement.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\playerMovement.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\playerMovement.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\playerMovement.cs",
+              "RelativeToolTip": "Assets\\scripts\\playerMovement.cs",
+              "ViewState": "AgIAABgCAAAAAAAAAAAAACsCAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-27T17:24:39.36Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TrackManager.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TrackManager.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\TrackManager.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\TrackManager.cs",
+              "RelativeToolTip": "Assets\\scripts\\TrackManager.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAADwv0kAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-16T05:58:39.798Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "scoreConroller.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\scoreConroller.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\scoreConroller.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\scoreConroller.cs",
+              "RelativeToolTip": "Assets\\scripts\\scoreConroller.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-07T14:49:51.884Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CameraFollow.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\CameraFollow.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\CameraFollow.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\scripts\\CameraFollow.cs",
+              "RelativeToolTip": "Assets\\scripts\\CameraFollow.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-29T13:51:07.968Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "TerrainFix.cs",
+              "DocumentMoniker": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\TerrainFix.cs",
+              "RelativeDocumentMoniker": "Assets\\TerrainFix.cs",
+              "ToolTip": "E:\\UnityProjects\\Survival-Shift-Running\\Assets\\TerrainFix.cs",
+              "RelativeToolTip": "Assets\\TerrainFix.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-14T15:05:57.956Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

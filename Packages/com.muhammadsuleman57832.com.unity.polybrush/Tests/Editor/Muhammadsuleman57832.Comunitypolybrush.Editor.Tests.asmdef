@@ -1,0 +1,14 @@
+{
+    "name": "Muhammadsuleman57832.Comunitypolybrush.Editor.Tests",
+    "references": [
+        "Muhammadsuleman57832.Comunitypolybrush.Editor",
+        "Muhammadsuleman57832.Comunitypolybrush"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

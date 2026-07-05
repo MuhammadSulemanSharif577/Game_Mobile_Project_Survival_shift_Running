@@ -1,0 +1,11 @@
+{
+    "name": "Muhammadsuleman57832.Comunitypolybrush.Tests",
+    "references": [
+        "Muhammadsuleman57832.Comunitypolybrush"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

@@ -1,0 +1,10 @@
+{
+    "name": "Muhammadsuleman57832.Comunitypolybrush.Editor",
+    "references": [
+      "Muhammadsuleman57832.Comunitypolybrush"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}
