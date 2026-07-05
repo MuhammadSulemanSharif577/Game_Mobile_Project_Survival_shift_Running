@@ -147,12 +147,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrackTile
   trackCenterXOffset: -18
   laneDistance: 0.2
-  coinPrefab: {fileID: 3202739422195025285, guid: e4a0ca3bde14dbb40971045d467802d8, type: 3}
+  coinPrefab: {fileID: 8516786005925837427, guid: d8e7d682c212c1741adfb76957f48a72, type: 3}
   obstaclePrefabs:
-  - {fileID: 4829289889993684948, guid: 14efb5a5e98c9e640b80214b0f36266f, type: 3}
-  - {fileID: 919132149155446097, guid: 59d3d34db48a4254388300194620f49a, type: 3}
-  - {fileID: 4964233042095275205, guid: bbe5255ec12bca54d8d8fe04b7ebeda8, type: 3}
   - {fileID: 4375559358311498107, guid: 4c31732e8de6a64439db51aec2ddf45f, type: 3}
+  - {fileID: 1400938507355842, guid: e6dfc33500f045d48a278519738f5d42, type: 3}
+  - {fileID: 1763083464843644, guid: f9a96b9a70de8214f9184755b87f1fd1, type: 3}
+  - {fileID: 1312324439043214, guid: 63deb6a331a2ea1439cf4a847f5df912, type: 3}
+  - {fileID: 2197137296818355450, guid: 9a297dc57e88b464f94070684a8ae8ab, type: 3}
+  - {fileID: 1931327446255415460, guid: 0b2a412efe6f6984c87ea0f626de8e0e, type: 3}
+  - {fileID: 5677683594373837015, guid: 8af1fd6ea6147d849931f97649fb8045, type: 3}
   gunPickupPrefab: {fileID: 1114295414538280807, guid: f2ea764123d4d594e92356f4cf8fcc61, type: 3}
   obstacleChance: 58.5
   coinChance: 100

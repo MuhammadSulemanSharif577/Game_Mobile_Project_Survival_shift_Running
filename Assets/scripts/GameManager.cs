@@ -28,7 +28,14 @@ public class GameManager : MonoBehaviour
 
     private void ShowGameOverUI()
     {
-        // 1. Activate the screen panel
+        // 1. Hide gameplay HUD
+        GamePauseController pauseController = FindFirstObjectByType<GamePauseController>();
+        if (pauseController != null)
+        {
+            pauseController.SetHUDActive(false);
+        }
+
+        // 2. Activate the screen panel
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);

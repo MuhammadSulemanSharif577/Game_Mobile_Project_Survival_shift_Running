@@ -10,6 +10,5 @@ AssetOrigin:
   productId: 340494
   packageName: "Stylized Coin Pack \u2013 Gold, Silver, Bronze & Wood"
   packageVersion: 1.0
-  assetPath: Assets/PolyKebap/Stylized Coin Pack/Prefabs/Bronze Coins/Coin_Bronze_Gear
-    1.prefab
+  assetPath: Assets/CoinPrefab 1/Coin_Bronze_Gear 1.prefab
   uploadId: 823710

@@ -5,7 +5,7 @@ using System.Collections;
 public class TrackTile : MonoBehaviour
 {
     [Header("Lane Settings (Must Match PlayerMove Exactly)")]
-    [SerializeField] float trackCenterXOffset = -18.0f;
+    [SerializeField] float trackCenterXOffset = -15.0f;
     [SerializeField] float laneDistance = 0.2f;
 
     [Header("Prefabs to Spawn")]
@@ -99,7 +99,7 @@ public class TrackTile : MonoBehaviour
                 availableLanes.Remove(chosenLane);
             }
 
-            // 2. Spawn coins in remaining lanes
+            // 3. Spawn coins in remaining lanes
             foreach (int lane in availableLanes)
             {
                 if (Random.Range(0f, 100f) < coinChance && coinPrefab != null)
@@ -168,8 +168,6 @@ public class TrackTile : MonoBehaviour
         // 4. For Gun Pickups:
         if (isGunPickup)
         {
-            spawnedObj.tag = "GunPickup";
-
             Animator gunAnim = spawnedObj.GetComponent<Animator>();
             if (gunAnim == null) gunAnim = spawnedObj.GetComponentInChildren<Animator>();
             if (gunAnim != null) gunAnim.enabled = false;
@@ -188,37 +186,27 @@ public class TrackTile : MonoBehaviour
         }
 
         // 5. For coins: ensure the tag is "Coin" and the trigger collider is properly sized.
-        //    The coin prefab's collider is already centered at (0,0,0) relative to the mesh, so
-        //    moving the transform is enough — no collider re-centering needed.
         if (isCoin)
         {
             // FIX: The coin prefab's tag might be "Untagged" since the FBX base model doesn't
             // have a tag set. We force it to "Coin" so OnTriggerEnter tag checks work.
             spawnedObj.tag = "Coin";
 
-            // FIX: The coin's Animator controller has NO animation states but is still enabled.
-            // An active Animator with a controller assigned "owns" the transform and can prevent
-            // script-driven position/scale changes (like the float-up on collection).
-            // Disable it so CoinScript has full control over transform.
+            // Disable Animator controller so CoinScript has full control over transform
             Animator coinAnim = spawnedObj.GetComponent<Animator>();
             if (coinAnim == null) coinAnim = spawnedObj.GetComponentInChildren<Animator>();
             if (coinAnim != null) coinAnim.enabled = false;
 
-            // FIX: Add a kinematic Rigidbody so the coin is a "Kinematic Trigger Collider"
-            // instead of a "Static Trigger Collider". With AutoSyncTransforms=0 in Physics settings,
-            // static triggers that are moved after creation can fail to register.
-            // A kinematic Rigidbody ensures Unity's physics engine properly tracks the collider.
+            // Add a kinematic Rigidbody so the coin is a "Kinematic Trigger Collider"
             Rigidbody coinRb = spawnedObj.GetComponent<Rigidbody>();
             if (coinRb == null) coinRb = spawnedObj.AddComponent<Rigidbody>();
             coinRb.isKinematic = true;
             coinRb.useGravity = false;
 
             // Ensure the trigger collider is large enough for reliable detection.
-            // The prefab's CapsuleCollider is only radius 0.2, height 0.4 — we enlarge it
-            // so the player can't pass through at speed.
             foreach (Collider c in spawnedObj.GetComponentsInChildren<Collider>(true))
             {
-                c.isTrigger = true; // Ensure it stays a trigger
+                c.isTrigger = true;
                 if (c is CapsuleCollider capsule)
                 {
                     capsule.radius = Mathf.Max(capsule.radius, 0.5f);
@@ -227,11 +215,12 @@ public class TrackTile : MonoBehaviour
             }
 
             Debug.Log($"[TrackTile] Spawned COIN '{prefab.name}' at lane {lane} | worldPos: {spawnedObj.transform.position} | groundY: {groundY:F3}");
-            return; // Coins are done — skip the obstacle bounds logic below
+            return;
         }
 
         // 5. For obstacles: use bounds to align the bottom to ground level,
         //    and re-center colliders to match the visual mesh.
+        spawnedObj.tag = "Obstacle";
         Bounds bounds = new Bounds();
         bool hasBounds = false;
         foreach (Renderer r in spawnedObj.GetComponentsInChildren<Renderer>(true))
