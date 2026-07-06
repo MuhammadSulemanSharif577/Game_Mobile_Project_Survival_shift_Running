@@ -86,8 +86,19 @@ public class CoinScript : MonoBehaviour
         }
         else
         {
-            // COLLECTION ANIMATION: Move straight upward along the global Y axis
-            transform.Translate(Vector3.up * floatUpSpeed * Time.deltaTime, Space.World);
+            // COLLECTION ANIMATION: Swoop towards the top-right of the viewport (UI Coin Score Panel)
+            if (Camera.main != null)
+            {
+                // Viewport coordinates: x=0.8, y=0.85 matches the top-right HUD area, 2.0m depth
+                Vector3 targetWorldPos = Camera.main.ViewportToWorldPoint(new Vector3(0.8f, 0.85f, 2.0f));
+                float distance = Vector3.Distance(transform.position, targetWorldPos);
+                float speed = Mathf.Max(floatUpSpeed, distance * 8f);
+                transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, speed * Time.deltaTime);
+            }
+            else
+            {
+                transform.Translate(Vector3.up * floatUpSpeed * Time.deltaTime, Space.World);
+            }
 
             // Shrink over time
             transform.localScale = Vector3.MoveTowards(transform.localScale, targetScale, Time.deltaTime * shrinkSpeed);

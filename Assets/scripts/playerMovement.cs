@@ -299,13 +299,14 @@ public class PlayerMove : MonoBehaviour
 
     bool TryGetGroundY(out float groundY)
     {
-        Vector3 origin = new Vector3(rb.position.x, rb.position.y + groundRaycastHeight, rb.position.z);
+        // Use a fixed high Y coordinate of 25.0f to ensure the raycast origin starts way above the road
+        Vector3 origin = new Vector3(rb.position.x, 25f, rb.position.z);
         int layerMask = groundLayer == 0 ? ~0 : (int)groundLayer;
 
         RaycastHit[] hits = Physics.RaycastAll(
             origin,
             Vector3.down,
-            groundRaycastDistance,
+            40f, // Use a larger distance of 40.0f to ensure it reaches below the road
             layerMask,
             QueryTriggerInteraction.Ignore
         );
@@ -515,10 +516,10 @@ public class PlayerMove : MonoBehaviour
             Camera.main.transform.SetParent(null);
         }
 
-        // Stop movement
+        // Stop movement and lock physics immediately
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = false;
+        rb.isKinematic = true;
 
         // Ignore obstacle collisions
         gameObject.layer = 2;
@@ -555,7 +556,8 @@ public class PlayerMove : MonoBehaviour
             Vector3 startPos = characterModel.localPosition;
 
             Vector3 targetPos = startPos;
-            targetPos.y = - 0.7f;
+            targetPos.y = -0.8f;
+            targetPos.z = -0.8f;
 
             float duration = 0.25f;
             float elapsed = 0f;
@@ -599,9 +601,10 @@ public class PlayerMove : MonoBehaviour
         if (impactAudio != null)
             impactAudio.Play();
 
-        // Stop all movement immediately
+        // Stop all movement immediately and lock physics
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
 
         // Reduce capsule size so player lies flat on the ground
         if (playerCollider != null)
@@ -634,8 +637,8 @@ public class PlayerMove : MonoBehaviour
         {
             Vector3 startPos = characterModel.localPosition;
             Vector3 targetPos = startPos;
-            targetPos.y = -1.2f;
-
+            targetPos.y = -0.8f;
+            targetPos.z = -0.8f;
             float duration = 0.25f;
             float elapsed = 0f;
 
