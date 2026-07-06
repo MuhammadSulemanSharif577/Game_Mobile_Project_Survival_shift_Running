@@ -7,7 +7,7 @@ public class CoinScript : MonoBehaviour
     [SerializeField] AudioSource coinSound;
 
     [Header("Rotation Settings")]
-    [SerializeField] float rotationSpeed = 100f; // Degrees per second
+    [SerializeField] float rotationSpeed = 90f; // Degrees per second
 
     [Header("Collection Animation Settings")]
     [SerializeField] float floatUpSpeed = 6f;
@@ -44,7 +44,7 @@ public class CoinScript : MonoBehaviour
     {
         initialScale = transform.localScale;
 
-        // Cache the player transform immediately
+ 
         PlayerMove player = FindFirstObjectByType<PlayerMove>();
         if (player != null) playerTransform = player.transform;
     }
