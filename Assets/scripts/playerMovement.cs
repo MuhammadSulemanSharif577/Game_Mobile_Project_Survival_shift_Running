@@ -104,6 +104,28 @@ public class PlayerMove : MonoBehaviour
 
     }
 
+    void Update()
+    {
+        if (isDead || Time.timeScale == 0f) return;
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            LeftMove();
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            RightMove();
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Slide();
+        }
+    }
+
     void FixedUpdate()
     {
         // If the player is dead, skip all updates including ground checks and snapping
