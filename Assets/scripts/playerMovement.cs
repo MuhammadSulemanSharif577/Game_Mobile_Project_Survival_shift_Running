@@ -18,6 +18,7 @@ public class PlayerMove : MonoBehaviour
     public float TrackCenterXOffset => trackCenterXOffset;
     public float LaneDistance => laneDistance;
     public bool IsDead => isDead;
+    public float StartingZ { get; private set; }
 
     [Header("Animation")]
     [SerializeField] Animator animator;
@@ -102,6 +103,7 @@ public class PlayerMove : MonoBehaviour
             originalCharacterLocalPos = characterModel.localPosition;
         }
 
+        StartingZ = transform.position.z;
     }
 
     void Update()
@@ -132,11 +134,6 @@ public class PlayerMove : MonoBehaviour
         if (isDead) return;
 
         isGrounded = CheckGrounded();
-
-        if (isGrounded && !isSliding)
-        {
-            SnapToGround(false);
-        }
 
         // Reduce speed dynamically when health is <= 30%
         if (healthSystem != null && healthSystem.health <= 0.3f)
@@ -177,6 +174,12 @@ public class PlayerMove : MonoBehaviour
             bounded.x = clampedX;
             rb.position = bounded;
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, rb.linearVelocity.z);
+        }
+
+        // Snap to ground at the end of FixedUpdate, utilizing the newly updated velocities!
+        if (isGrounded && !isSliding)
+        {
+            SnapToGround(false);
         }
     }
 
@@ -362,9 +365,16 @@ public class PlayerMove : MonoBehaviour
         pos.y = targetRootY;
 
         if (force)
+        {
             rb.position = pos;
+        }
         else
+        {
+            // Apply current frame velocity to prevent freezing horizontal/forward movement
+            pos.x += rb.linearVelocity.x * Time.fixedDeltaTime;
+            pos.z += rb.linearVelocity.z * Time.fixedDeltaTime;
             rb.MovePosition(pos);
+        }
 
         groundedRootY = targetRootY;
 
