@@ -67,7 +67,7 @@ public class GamePauseController : MonoBehaviour
         if (isPaused) return;
 
         // Verify player is not already dead (don't pause during game over)
-        PlayerMove player = FindFirstObjectByType<PlayerMove>();
+        IRunnerController player = RunnerControllerLocator.Find();
         if (player != null && player.IsDead) return;
 
         isPaused = true;
@@ -124,6 +124,19 @@ public class GamePauseController : MonoBehaviour
 
         // 5. Restore time and HUD (including Pause button)
         isPaused = false;
+
+        PlayerMove desertPlayer = FindAnyObjectByType<PlayerMove>();
+        if (desertPlayer != null)
+        {
+            desertPlayer.RestoreAnimatorAfterPause();
+        }
+
+        CyberPlayerMove cyberPlayer = FindAnyObjectByType<CyberPlayerMove>();
+        if (cyberPlayer != null)
+        {
+            cyberPlayer.RestoreAnimatorAfterPause();
+        }
+
         Time.timeScale = 1f;
         SetHUDActive(true);
     }
@@ -161,20 +174,31 @@ public class GamePauseController : MonoBehaviour
     {
         string[] hudNames = new string[] {
             "leftMove", "RightMove", "slide", "jump", "Pause",
-            "StatBar", "ScoreText", "CoinIcon", "Bottle", "GameOverBulletsPanel"
+            // Keep both the original names and the renamed Desert HUD names supported.
+            "StatBar", "CoinPanel", "ScoreText", "CoinCollected", "RunScoreText",
+            "CrownIcon", "CoinIcon", "Bottle", "GameOverBulletsPanel",
+            "CyberBulletsPanel", "OnGameCyberBulletsPanel", "Bullets", "CyberBullets",
+            "shooting", "CyberShooting"
         };
-        
-        foreach (string name in hudNames)
+
+        PlayerGunController gc = FindFirstObjectByType<PlayerGunController>();
+
+        foreach (Transform child in transform.GetComponentsInChildren<Transform>(true))
         {
-            Transform t = transform.Find(name);
-            if (t != null)
+            foreach (string name in hudNames)
             {
-                t.gameObject.SetActive(active);
+                if (child.name == name)
+                {
+                    bool isWeaponHud = name == "GameOverBulletsPanel" || name == "CyberBulletsPanel" ||
+                                       name == "OnGameCyberBulletsPanel" || name == "Bullets" ||
+                                       name == "CyberBullets" || name == "shooting" || name == "CyberShooting";
+                    child.gameObject.SetActive(active && (!isWeaponHud || (gc != null && gc.HasGun)));
+                    break;
+                }
             }
         }
 
         // Also toggle the dynamic shoot button if player currently has gun
-        PlayerGunController gc = FindFirstObjectByType<PlayerGunController>();
         if (gc != null && gc.HasGun)
         {
             Transform shootTrans = transform.Find("shooting");

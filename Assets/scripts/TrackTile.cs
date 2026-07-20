@@ -5,26 +5,31 @@ using System.Collections;
 public class TrackTile : MonoBehaviour
 {
     [Header("Lane Settings (Must Match PlayerMove Exactly)")]
-    [SerializeField] float trackCenterXOffset = -15.0f;
-    [SerializeField] float laneDistance = 0.2f;
+    [SerializeField] protected float trackCenterXOffset = -15.0f;
+    [SerializeField] protected float laneDistance = 0.2f;
 
     [Header("Prefabs to Spawn")]
-    [SerializeField] GameObject coinPrefab;
-    [SerializeField] GameObject[] obstaclePrefabs;
-    [SerializeField] GameObject gunPickupPrefab;
+    [SerializeField] protected GameObject coinPrefab;
+    [SerializeField] protected GameObject[] obstaclePrefabs;
+    [SerializeField] protected GameObject gunPickupPrefab;
+    [SerializeField] protected GameObject waterBottlePrefab;
 
     [Header("Spawn Logic")]
-    [Range(0f, 100f)][SerializeField] float obstacleChance = 40f;
-    [Range(0f, 100f)][SerializeField] float coinChance = 35f;
-    [Range(0f, 100f)][SerializeField] float gunSpawnChance = 3.0f;
+    [Range(0f, 100f)][SerializeField] protected float obstacleChance = 40f;
+    [Range(0f, 100f)][SerializeField] protected float coinChance = 35f;
+    [Range(0f, 100f)][SerializeField] protected float gunSpawnChance = 3.0f;
+    [Range(0f, 100f)][SerializeField] protected float waterBottleSpawnChance = 12f;
 
     [Tooltip("Local Z positions along this tile where items can spawn. Adjust based on tile length!")]
-    [SerializeField] float[] localZPositions = new float[] { 10f, 20f, 30f };
+    [SerializeField] protected float[] localZPositions = new float[] { 10f, 20f, 30f };
 
-    void Start()
+    [SerializeField] protected float emptyStartDistance = 150f;
+    [SerializeField] protected bool scaleCars = true;
+
+    protected virtual void Start()
     {
         // Automatically match the player's lane positioning settings at runtime if available
-        PlayerMove player = FindFirstObjectByType<PlayerMove>();
+        IRunnerController player = RunnerControllerLocator.Find();
         if (player != null)
         {
             trackCenterXOffset = player.TrackCenterXOffset;
@@ -33,17 +38,24 @@ public class TrackTile : MonoBehaviour
         StartCoroutine(SpawnSequence());
     }
 
-    IEnumerator SpawnSequence()
+    protected virtual IEnumerator SpawnSequence()
     {
         // Wait one physics frame so the newly instantiated tile colliders are registered
         yield return new WaitForFixedUpdate();
         GenerateObstaclesAndCoins();
     }
 
-    void GenerateObstaclesAndCoins()
+    protected virtual void GenerateObstaclesAndCoins()
     {
-        // Keep the first 100 meters of the track completely empty for a clean player start
-        if (transform.position.z < 50f)
+        float playerStartingZ = 0f;
+        IRunnerController player = RunnerControllerLocator.Find();
+        if (player != null)
+        {
+            playerStartingZ = player.StartingZ;
+        }
+
+        float distanceFromStart = transform.position.z - playerStartingZ;
+        if (distanceFromStart < emptyStartDistance)
         {
             return;
         }
@@ -54,6 +66,10 @@ public class TrackTile : MonoBehaviour
         if (tileRenderer != null)
         {
             tileLength = tileRenderer.bounds.size.z;
+        }
+        if (tileLength < 40f)
+        {
+            tileLength = 120f;
         }
 
         List<float> finalZPositions = new List<float>();
@@ -87,6 +103,15 @@ public class TrackTile : MonoBehaviour
                 availableLanes.Remove(chosenLane);
             }
 
+            // 1b. Roll for a Water Bottle
+            if (waterBottlePrefab != null && Random.Range(0f, 100f) < waterBottleSpawnChance && availableLanes.Count > 0)
+            {
+                int randomLaneIndex = Random.Range(0, availableLanes.Count);
+                int chosenLane = availableLanes[randomLaneIndex];
+                SpawnItem(waterBottlePrefab, chosenLane, randomizedZ);
+                availableLanes.Remove(chosenLane);
+            }
+
             // 2. Roll for an Obstacle
             if (Random.Range(0f, 100f) < obstacleChance && obstaclePrefabs.Length > 0 && availableLanes.Count > 0)
             {
@@ -117,7 +142,7 @@ public class TrackTile : MonoBehaviour
         }
     }
 
-    void SpawnItem(GameObject prefab, int lane, float localZ)
+    protected virtual void SpawnItem(GameObject prefab, int lane, float localZ)
     {
         if (prefab == null) return;
 
@@ -125,18 +150,8 @@ public class TrackTile : MonoBehaviour
         float targetWorldX = trackCenterXOffset + ((lane - 1) * laneDistance);
 
         // 1. Raycast down BEFORE instantiating to find the exact road surface Y
-        float groundY = transform.position.y;
-        Vector3 rayOrigin = new Vector3(targetWorldX, transform.position.y + 25f, transform.position.z + localZ);
-        
-        int layerMask = ~0;
-
-        RaycastHit hit;
-        bool hitSomething = Physics.Raycast(rayOrigin, Vector3.down, out hit, 50f, layerMask, QueryTriggerInteraction.Ignore);
-        if (hitSomething)
-        {
-            groundY = hit.point.y;
-        }
-        else
+        float groundY;
+        if (!TryGetRoadY(targetWorldX, localZ, out groundY))
         {
             // If the raycast hits nothing, it means there is no road/ground in this lane at this Z coordinate.
             // We skip spawning the item entirely so it does not float in mid-air.
@@ -144,12 +159,19 @@ public class TrackTile : MonoBehaviour
             return;
         }
 
-        bool isCoin = prefab.name.ToLower().Contains("coin") || prefab == coinPrefab;
-        bool isGunPickup = prefab.name.ToLower().Contains("gun") || prefab == gunPickupPrefab;
+        // The inspector arrays are authoritative. A newly added obstacle must stay
+        // an obstacle even if its asset name contains words such as gun or bottle.
+        bool isObstacle = IsConfiguredObstaclePrefab(prefab);
+        bool isCoin = !isObstacle &&
+            (prefab == coinPrefab || prefab.GetComponentInChildren<CoinScript>(true) != null);
+        bool isGunPickup = !isObstacle &&
+            (prefab == gunPickupPrefab || prefab.GetComponentInChildren<GunPickup>(true) != null);
+        bool isWaterBottle = !isObstacle &&
+            (prefab == waterBottlePrefab || prefab.GetComponentInChildren<WaterBottleItem>(true) != null);
 
         // 2. Calculate the correct spawn Y position
         float spawnY;
-        if (isCoin || isGunPickup)
+        if (isCoin || isGunPickup || isWaterBottle)
         {
             // Place coin/gun center at waist height (1.0m above ground)
             spawnY = groundY + 1.0f;
@@ -163,7 +185,14 @@ public class TrackTile : MonoBehaviour
         // 3. Instantiate the object
         Vector3 spawnPosition = new Vector3(targetWorldX, spawnY, transform.position.z + localZ);
         GameObject spawnedObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
-        spawnedObj.transform.SetParent(transform, true);
+        
+        // Scale up car obstacles that are exported in tiny centimeter units
+        if (scaleCars && prefab.name.ToLower().Contains("car"))
+        {
+            spawnedObj.transform.localScale = new Vector3(30f, 30f, 30f);
+        }
+
+        spawnedObj.transform.SetParent(GetItemContainer(), true);
 
         // 4. For Gun Pickups:
         if (isGunPickup)
@@ -218,9 +247,40 @@ public class TrackTile : MonoBehaviour
             return;
         }
 
+        // 5b. For water bottles:
+        if (isWaterBottle)
+        {
+            spawnedObj.tag = "Untagged"; // WaterBottleItem trigger checks are component/tag based
+            
+            // Disable Animator controller so WaterBottleItem has full control over transform rotation
+            Animator bottleAnim = spawnedObj.GetComponent<Animator>();
+            if (bottleAnim == null) bottleAnim = spawnedObj.GetComponentInChildren<Animator>();
+            if (bottleAnim != null) bottleAnim.enabled = false;
+
+            Rigidbody bottleRb = spawnedObj.GetComponent<Rigidbody>();
+            if (bottleRb == null) bottleRb = spawnedObj.AddComponent<Rigidbody>();
+            bottleRb.isKinematic = true;
+            bottleRb.useGravity = false;
+
+            foreach (Collider c in spawnedObj.GetComponentsInChildren<Collider>(true))
+            {
+                c.isTrigger = true;
+            }
+            
+            Debug.Log($"[TrackTile] Spawned WATER BOTTLE '{prefab.name}' at lane {lane} | worldPos: {spawnedObj.transform.position} | groundY: {groundY:F3}");
+            return;
+        }
+
         // 5. For obstacles: use bounds to align the bottom to ground level,
         //    and re-center colliders to match the visual mesh.
         spawnedObj.tag = "Obstacle";
+
+        foreach (Rigidbody obstacleRb in spawnedObj.GetComponentsInChildren<Rigidbody>(true))
+        {
+            obstacleRb.isKinematic = true;
+            obstacleRb.useGravity = false;
+        }
+
         Bounds bounds = new Bounds();
         bool hasBounds = false;
         foreach (Renderer r in spawnedObj.GetComponentsInChildren<Renderer>(true))
@@ -242,21 +302,37 @@ public class TrackTile : MonoBehaviour
             // Update bounds to match the new position
             bounds.center += Vector3.up * offsetY;
 
-            // Re-center colliders to match the visual mesh center
-            foreach (Collider c in spawnedObj.GetComponentsInChildren<Collider>(true))
+            // Resolve colliders on the obstacle (programmatically add if missing)
+            Collider[] colliders = spawnedObj.GetComponentsInChildren<Collider>(true);
+            if (colliders.Length == 0)
             {
-                Vector3 localBoundsCenter = c.transform.InverseTransformPoint(bounds.center);
-                if (c is CapsuleCollider capsule)
+                BoxCollider newBox = spawnedObj.AddComponent<BoxCollider>();
+                colliders = new Collider[] { newBox };
+                Debug.Log($"[TrackTile] Obstacle '{prefab.name}' had no colliders. Programmatically added BoxCollider.");
+            }
+
+            // Re-center and resize colliders to match the visual mesh bounds
+            foreach (Collider c in colliders)
+            {
+                Vector3 localCenter = c.transform.InverseTransformPoint(bounds.center);
+                Vector3 localSize = c.transform.InverseTransformVector(bounds.size);
+                localSize = new Vector3(Mathf.Abs(localSize.x), Mathf.Abs(localSize.y), Mathf.Abs(localSize.z));
+
+                if (c is BoxCollider box)
                 {
-                    capsule.center = new Vector3(capsule.center.x, localBoundsCenter.y, capsule.center.z);
+                    box.center = localCenter;
+                    box.size = localSize;
+                }
+                else if (c is CapsuleCollider capsule)
+                {
+                    capsule.center = localCenter;
+                    capsule.height = localSize.y;
+                    capsule.radius = Mathf.Min(localSize.x, localSize.z) * 0.5f;
                 }
                 else if (c is SphereCollider sphere)
                 {
-                    sphere.center = new Vector3(sphere.center.x, localBoundsCenter.y, sphere.center.z);
-                }
-                else if (c is BoxCollider box)
-                {
-                    box.center = new Vector3(box.center.x, localBoundsCenter.y, box.center.z);
+                    sphere.center = localCenter;
+                    sphere.radius = Mathf.Max(localSize.x, Mathf.Max(localSize.y, localSize.z)) * 0.5f;
                 }
             }
 
@@ -266,5 +342,132 @@ public class TrackTile : MonoBehaviour
         {
             Debug.LogWarning($"[TrackTile] Spawned {prefab.name} but it has no bounds!");
         }
+    }
+
+    protected bool IsConfiguredObstaclePrefab(GameObject prefab)
+    {
+        if (prefab == null || obstaclePrefabs == null)
+            return false;
+
+        foreach (GameObject obstaclePrefab in obstaclePrefabs)
+        {
+            if (obstaclePrefab == prefab)
+                return true;
+        }
+
+        return false;
+    }
+
+    protected virtual bool TryGetRoadY(float worldX, float localZ, out float roadY)
+    {
+        Vector3 rayOrigin = new Vector3(worldX, transform.position.y + 25f, transform.position.z + localZ);
+        RaycastHit[] hits = Physics.RaycastAll(rayOrigin, Vector3.down, 50f, ~0, QueryTriggerInteraction.Ignore);
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (IsGroundCollider(hit.collider))
+            {
+                roadY = hit.point.y;
+                return true;
+            }
+        }
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider != null && !hit.collider.isTrigger &&
+                !IsSpawnedItemCollider(hit.collider) &&
+                hit.collider.GetComponentInParent<TrackTile>() != null)
+            {
+                roadY = hit.point.y;
+                return true;
+            }
+        }
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider != null && !hit.collider.isTrigger && !IsSpawnedItemCollider(hit.collider))
+            {
+                roadY = hit.point.y;
+                return true;
+            }
+        }
+
+        roadY = transform.position.y;
+        return false;
+    }
+
+    protected virtual bool IsGroundCollider(Collider col)
+    {
+        if (col == null || col.isTrigger) return false;
+        if (IsSpawnedItemCollider(col)) return false;
+        if (col.CompareTag("Ground")) return true;
+        if (col.transform.parent != null && col.transform.parent.CompareTag("Ground")) return true;
+
+        string name = col.name.ToLower();
+
+        // Exclude common overhead decorations/signs/buildings
+        if (name.Contains("sign") || name.Contains("building") || name.Contains("prop") || 
+            name.Contains("wire") || name.Contains("light") || name.Contains("wall") || 
+            name.Contains("roof") || name.Contains("bridge") || name.Contains("arch") || name.Contains("tunnel"))
+        {
+            return false;
+        }
+
+        return name.Contains("tile") ||
+               name.Contains("plane") ||
+               name.Contains("road") ||
+               name.Contains("terrain") ||
+               name.Contains("ground") ||
+               name.Contains("pavement") ||
+               name.Contains("shoulder") ||
+               name.Contains("scut");
+    }
+
+    private bool IsSpawnedItemCollider(Collider col)
+    {
+        if (col == null)
+            return false;
+
+        if (RunnerControllerLocator.GetFrom(col) != null ||
+            col.GetComponentInParent<WaterBottleItem>() != null ||
+            col.GetComponentInParent<CoinScript>() != null)
+        {
+            return true;
+        }
+
+        Transform current = col.transform;
+        while (current != null && current != transform)
+        {
+            if (current.CompareTag("Obstacle") || current.CompareTag("Coin"))
+                return true;
+            current = current.parent;
+        }
+
+        return false;
+    }
+
+    private Transform itemContainer;
+
+    protected Transform GetItemContainer()
+    {
+        if (itemContainer == null)
+        {
+            itemContainer = transform.Find("UnscaledItemContainer");
+            if (itemContainer == null)
+            {
+                GameObject containerObj = new GameObject("UnscaledItemContainer");
+                itemContainer = containerObj.transform;
+                itemContainer.SetParent(transform, false);
+
+                // Negate the parent's non-uniform scaling
+                itemContainer.localScale = new Vector3(
+                    1f / Mathf.Max(0.001f, transform.localScale.x),
+                    1f / Mathf.Max(0.001f, transform.localScale.y),
+                    1f / Mathf.Max(0.001f, transform.localScale.z)
+                );
+            }
+        }
+        return itemContainer;
     }
 }

@@ -4,23 +4,25 @@ using System.Collections;
 public class WaterBottleItem : MonoBehaviour
 {
     [Header("Collection Settings")]
-    [SerializeField] private bool collected = false;
-    [SerializeField] private AudioSource collectSound;
+    [SerializeField] protected bool collected = false;
+    [SerializeField] protected AudioSource collectSound;
 
     [Header("Rotation Settings")]
-    [SerializeField] private float rotationSpeed = 90f;
+    [SerializeField] protected float rotationSpeed = 90f;
 
     [Header("Light-Up Flash Effect")]
     [Tooltip("Assign a glowing prefab, a Unity Light, or a bright particle system here.")]
-    [SerializeField] private GameObject lightEffectPrefab;
-    [SerializeField] private float effectDuration = 0.5f;
-    [SerializeField] private float maxEffectScale = 2.0f;
+    [SerializeField] protected GameObject lightEffectPrefab;
+    [SerializeField] protected float effectDuration = 0.5f;
+    [SerializeField] protected float maxEffectScale = 2.0f;
 
-    private Transform playerTransform;
-    private Vector3 initialScale;
-    private const float targetScaleFactor = 0.18f; // Scale factor to resize the large bottle model
+    protected Transform playerTransform;
+    protected Vector3 initialScale;
 
-    void Start()
+    [Header("Model Scaling")]
+    [SerializeField] protected float targetScaleFactor = 0.18f; // Scale factor to resize the large bottle model
+
+    protected virtual void Start()
     {
         // Scale down the large bottle model to a realistic size
         transform.localScale = new Vector3(targetScaleFactor, targetScaleFactor, targetScaleFactor);
@@ -35,11 +37,11 @@ public class WaterBottleItem : MonoBehaviour
         col.isTrigger = true;
 
         // Cache player for a distance fail-safe (similar to your Coin script)
-        PlayerMove player = FindFirstObjectByType<PlayerMove>();
-        if (player != null) playerTransform = player.transform;
+        IRunnerController player = RunnerControllerLocator.Find();
+        if (player != null) playerTransform = player.RunnerTransform;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (!collected)
         {
@@ -64,18 +66,18 @@ public class WaterBottleItem : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (collected) return;
 
         // Matches both Unity's standard and lowercase tag formats, or checks component
-        if (other.CompareTag("Player") || other.CompareTag("player") || other.GetComponent<PlayerMove>() != null)
+        if (other.CompareTag("Player") || other.CompareTag("player") || RunnerControllerLocator.GetFrom(other) != null)
         {
             CollectBottle();
         }
     }
 
-    private void CollectBottle()
+    protected virtual void CollectBottle()
     {
         collected = true;
 
@@ -90,6 +92,12 @@ public class WaterBottleItem : MonoBehaviour
             Debug.LogWarning("[WaterBottleItem] Could not find BottleHealthSystem in the scene!");
         }
 
+        GameObject DesertBottleSoundObject = GameObject.Find("BottleCollectSound");
+        if(DesertBottleSoundObject != null)
+        {
+            collectSound = DesertBottleSoundObject.GetComponent<AudioSource>();
+        }
+
         if (collectSound != null)
         {
             collectSound.Play();
@@ -99,7 +107,7 @@ public class WaterBottleItem : MonoBehaviour
         StartCoroutine(FlashAndDestroySequence());
     }
 
-    IEnumerator FlashAndDestroySequence()
+    protected virtual IEnumerator FlashAndDestroySequence()
     {
         // 1. Hide the bottle's main 3D model immediately so it looks "picked up"
         MeshRenderer mesh = GetComponent<MeshRenderer>();

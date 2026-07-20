@@ -78,6 +78,12 @@ public class BottleHealthSystem : MonoBehaviour
             refillAudio.Play();
         }
 
+        EnemyController enemy = FindAnyObjectByType<EnemyController>();
+        if (enemy != null)
+        {
+            enemy.RestoreFollowDistanceAfterRefill();
+        }
+
         Debug.Log($"[BottleHealthSystem] Bottle refilled by {refillAmount * 100}%. Current health: {health * 100}%");
     }
 
@@ -110,11 +116,10 @@ public class BottleHealthSystem : MonoBehaviour
         Debug.Log("[BottleHealthSystem] Dehydration Game Over triggered!");
 
         // Tell the player to safely run their crash sequence method
-        PlayerMove player = FindFirstObjectByType<PlayerMove>();
+        IRunnerController player = RunnerControllerLocator.Find();
         if (player != null)
         {
-            // Safely fires off the clean animation sequence handler via string identifier name
-            player.StartCoroutine("CollapseSequence");
+            player.TriggerObstacleDeath();
         }
         else
         {

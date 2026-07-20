@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
  
     private Vector3 offset;
     private float pitch;
-    private PlayerMove playerMove;
+    private IRunnerController playerMove;
     private bool hasRecordedDeathHeight = false;
     private float lockedY;
 
@@ -22,7 +22,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (player != null)
         {
-            playerMove = player.GetComponent<PlayerMove>();
+            playerMove = RunnerControllerLocator.GetFrom(player);
             CalculateOffset();
         }
     }
@@ -33,7 +33,7 @@ public class CameraFollow : MonoBehaviour
         if (playerObj != null)
         {
             player = playerObj.transform;
-            playerMove = playerObj.GetComponent<PlayerMove>();
+            playerMove = RunnerControllerLocator.GetFrom(playerObj.transform);
         }
 
         CalculateOffset();

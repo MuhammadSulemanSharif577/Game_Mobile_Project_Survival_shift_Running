@@ -4,7 +4,7 @@ using System.Collections;
 public class CoinScript : MonoBehaviour
 {
     [SerializeField] bool collectedCoin;
-    [SerializeField] AudioSource coinSound;
+    private AudioSource coinSound;
 
     [Header("Rotation Settings")]
     [SerializeField] float rotationSpeed = 90f; // Degrees per second
@@ -23,9 +23,7 @@ public class CoinScript : MonoBehaviour
 
         collectedCoin = true;
 
-        // Note: Capitalized 'S' assuming ScoreController is a static/singleton manager.
-        // Adjust this line if your score script is referenced differently!
-        scoreController.CoinCount += 1;
+        scoreController.AddCoin();
 
         // Disable the Animator so it releases control of transform properties,
         // allowing this script to execute the float-up and shrink animation.
@@ -44,9 +42,32 @@ public class CoinScript : MonoBehaviour
     {
         initialScale = transform.localScale;
 
- 
-        PlayerMove player = FindFirstObjectByType<PlayerMove>();
-        if (player != null) playerTransform = player.transform;
+        GameObject coinAudioObject = GameObject.Find("coin");
+
+        if (coinAudioObject != null)
+        {
+            coinSound = coinAudioObject.GetComponent<AudioSource>();
+
+            if (coinSound == null)
+            {
+                Debug.LogWarning(
+                    "[CoinScript] The 'coin' object exists but has no AudioSource."
+                );
+            }
+        }
+        else
+        {
+            Debug.LogWarning(
+                "[CoinScript] Scene audio object named 'coin' was not found."
+            );
+        }
+
+        IRunnerController player = RunnerControllerLocator.Find();
+
+        if (player != null)
+        {
+            playerTransform = player.RunnerTransform;
+        }
     }
 
     void Update()
@@ -62,8 +83,8 @@ public class CoinScript : MonoBehaviour
             // This catches cases where the physics trigger doesn't fire.
             if (playerTransform == null)
             {
-                PlayerMove player = FindFirstObjectByType<PlayerMove>();
-                if (player != null) playerTransform = player.transform;
+                IRunnerController player = RunnerControllerLocator.Find();
+                if (player != null) playerTransform = player.RunnerTransform;
             }
 
             if (playerTransform != null)
@@ -111,7 +132,7 @@ public class CoinScript : MonoBehaviour
 
         // The player is tagged "Player" (built-in, capital P) in the scene.
         // Also check by component as a fail-safe.
-        if (other.CompareTag("Player") || other.CompareTag("player") || other.GetComponent<PlayerMove>() != null)
+        if (other.CompareTag("Player") || other.CompareTag("player") || RunnerControllerLocator.GetFrom(other) != null)
         {
             Debug.Log($"[CoinScript] Trigger match! Collecting.");
             CollectCoin();

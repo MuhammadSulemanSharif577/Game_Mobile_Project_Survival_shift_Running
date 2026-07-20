@@ -13,8 +13,9 @@ public class TrackManager : MonoBehaviour
     [SerializeField] float safeDeleteDistance = 20f; // Distance behind the player before a tile is removed
 
     private float nextSpawnZ = 0f;
-    private float targetY = 0f;
-    private float trackCenterX = 0f;
+    [SerializeField] private float targetY = 2.79f;
+    [SerializeField] float trackCenterX = 0f;
+    [SerializeField] bool usePlayerXAsCenter = true;
     private List<GameObject> activeTiles = new List<GameObject>();
 
     void Start()
@@ -34,9 +35,23 @@ public class TrackManager : MonoBehaviour
 
         if (playerTransform != null)
         {
-            // Cache the player's initial X coordinate (which is snapped to the track center in PlayerMove.Start())
-            trackCenterX = playerTransform.position.x;
-            targetY = playerTransform.position.y;
+            // Cache the active runner's authored track center.
+            if (usePlayerXAsCenter)
+            {
+                IRunnerController runner = RunnerControllerLocator.GetFrom(playerTransform);
+                if (runner != null)
+                {
+                    trackCenterX = runner.TrackCenterXOffset;
+                }
+                else
+                {
+                    trackCenterX = playerTransform.position.x;
+                }
+            }
+            if (targetY == 0f)
+            {
+                targetY = playerTransform.position.y;
+            }
             nextSpawnZ = playerTransform.position.z;
         }
         else

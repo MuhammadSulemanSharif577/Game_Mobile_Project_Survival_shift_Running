@@ -5,11 +5,11 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private Animator animator;
     private BottleHealthSystem healthSystem;
-    private PlayerMove playerMove;
+    private IRunnerController playerMove;
     private CapsuleCollider enemyCollider;
     private float originalHeight;
     private Vector3 originalCenter;
-
+    [SerializeField] AudioSource MonsterRoar;
     [Header("Follow Settings")]
     [SerializeField] float followDistance = 6.0f;
     [SerializeField] float punchRadius = 1.3f;
@@ -20,15 +20,34 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        if (MonsterRoar == null)
+        {
+            GameObject roarObject = GameObject.Find("MonsterRoar");
+            if (roarObject != null)
+                MonsterRoar = roarObject.GetComponent<AudioSource>();
+        }
+
         GameObject playerObj = GameObject.Find("player");
         if (playerObj != null)
         {
             player = playerObj.transform;
-            playerMove = playerObj.GetComponent<PlayerMove>();
+            playerMove = RunnerControllerLocator.GetFrom(playerObj.transform);
         }
+
+        // The roar is event feedback for the low-health chase, not a scene-start sound.
+        if (MonsterRoar != null)
+        {
+            MonsterRoar.playOnAwake = false;
+            MonsterRoar.loop = false;
+            MonsterRoar.Stop();
+        }
+
         animator = GetComponent<Animator>();
+        if (animator != null)
+            animator.applyRootMotion = false;
+
         healthSystem = FindAnyObjectByType<BottleHealthSystem>();
-        
+
         enemyCollider = GetComponent<CapsuleCollider>();
         if (enemyCollider != null)
         {
@@ -38,6 +57,7 @@ public class EnemyController : MonoBehaviour
 
         currentFollowDistance = followDistance;
         hasPunched = false;
+        SnapBehindPlayer();
     }
 
     void Update()
@@ -48,35 +68,46 @@ public class EnemyController : MonoBehaviour
         {
             // If the player died but the enemy did not punch them (e.g. hit an obstacle), stop running
             if (!hasPunched && animator != null)
-            {
                 animator.speed = 0f;
-            }
             return;
         }
 
-        // Determine if player health is <= 30%
-        if (healthSystem != null && healthSystem.health <= 0.3f)
+        // Determine if player health is <= 25%.
+        if (healthSystem != null && healthSystem.health <= 0.25f)
         {
-            // Slowly decrease followDistance to punchRadius
-            currentFollowDistance = Mathf.MoveTowards(currentFollowDistance, punchRadius, catchUpSpeed * Time.deltaTime);
+            if (currentFollowDistance < followDistance &&
+                MonsterRoar != null &&
+                !MonsterRoar.isPlaying)
+            {
+                MonsterRoar.Play();
+            }
+
+            currentFollowDistance = Mathf.MoveTowards(
+                currentFollowDistance,
+                punchRadius,
+                catchUpSpeed * Time.deltaTime);
         }
 
-        // Align position behind the player (matching player lane X and following in Z)
-        Vector3 targetPosition = new Vector3(
-            player.position.x,
-            player.position.y,
-            player.position.z - currentFollowDistance
-        );
+        // Match the active lane and keep the enemy at an exact distance behind.
+        SnapBehindPlayer();
 
-        transform.position = targetPosition;
-        transform.rotation = player.rotation;
-
-        // Check if we are in punch radius and haven't punched yet
         if (!hasPunched && currentFollowDistance <= punchRadius + 0.05f)
         {
             hasPunched = true;
             TriggerPunchSequence();
         }
+    }
+
+    private void SnapBehindPlayer()
+    {
+        if (player == null)
+            return;
+
+        transform.position = new Vector3(
+            player.position.x,
+            player.position.y,
+            player.position.z - currentFollowDistance);
+        transform.rotation = player.rotation;
     }
 
     void TriggerPunchSequence()
@@ -103,5 +134,32 @@ public class EnemyController : MonoBehaviour
         {
             playerMove.KnockoutByEnemy();
         }
+    }
+
+    public void RestoreFollowDistanceAfterRefill()
+    {
+        // A collected bottle gives the player another chance. Cancel a punch that
+        // has not connected yet and restore the enemy's original chase spacing.
+        CancelInvoke(nameof(KnockoutPlayer));
+        currentFollowDistance = followDistance;
+        hasPunched = false;
+
+        if (enemyCollider != null)
+        {
+            enemyCollider.height = originalHeight;
+            enemyCollider.center = originalCenter;
+        }
+
+        if (animator != null)
+        {
+            animator.speed = 1f;
+            animator.ResetTrigger("punch");
+        }
+
+        if (MonsterRoar != null && MonsterRoar.isPlaying)
+            MonsterRoar.Stop();
+
+        if (player != null)
+            SnapBehindPlayer();
     }
 }
